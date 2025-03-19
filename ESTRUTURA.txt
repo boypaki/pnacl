@@ -1,0 +1,43 @@
+projeto-web/
+│
+├── app/                       # Pasta principal da aplicação
+│   ├── __init__.py           # Inicializador do Flask
+│   ├── models/               # Modelos de dados
+│   │   ├── __init__.py
+│   │   ├── users.py          # Modelo de usuários
+│   │   ├── licenses.py       # Modelo de licenças
+│   │   ├── downloads.py      # Modelo de downloads
+│   │   └── payments.py       # Modelo de pagamentos
+│   │
+│   ├── routes/               # Rotas e controladores
+│   │   ├── __init__.py
+│   │   ├── main.py           # Rotas principais
+│   │   ├── auth.py           # Rotas de autenticação
+│   │   ├── downloads.py      # Rotas de download
+│   │   ├── payment.py        # Rotas de pagamento
+│   │   ├── admin.py          # Rotas de administração
+│   │   └── api.py            # Rotas de API
+│   │
+│   ├── templates/            # Templates HTML
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   ├── auth/
+│   │   ├── admin/
+│   │   ├── dashboard/
+│   │   └── payment/
+│   │
+│   ├── static/               # Arquivos estáticos
+│   │   ├── css/
+│   │   ├── js/
+│   │   ├── img/
+│   │   └── downloads/        # Arquivos para download
+│   │
+│   └── utils/                # Utilitários diversos
+│       ├── __init__.py
+│       ├── email_sender.py   # Sistema de envio de emails
+│       ├── payment_gateway.py # Integração com gateway de pagamento
+│       └── license_manager.py # Gerenciador de licenças
+│
+├── config.py                 # Configurações do aplicativo
+├── run.py                    # Script de inicialização
+└── requirements.txt          # Dependências do projeto

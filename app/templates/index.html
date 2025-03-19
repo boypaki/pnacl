@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Sistema de Importação - Automatize seu E-commerce{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row py-5 align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-4 fw-bold">Importe produtos para o seu e-commerce de forma rápida e eficiente</h1>
+            <p class="lead my-4">Nosso software automatiza o processo de importação de produtos de qualquer site para WooCommerce e Shopify, economizando seu tempo e aumentando suas vendas.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="{{ url_for('main.pricing') }}" class="btn btn-primary btn-lg px-4 me-md-2">Ver Planos</a>
+                <a href="{{ url_for('downloads.list_downloads') }}" class="btn btn-outline-secondary btn-lg px-4">Download Gratuito</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+             <img src="{{ url_for('static', filename='img/hero-image.png') }}" alt="Software de Importação" class="img-fluid rounded shadow">
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">Principais Funcionalidades</h2>
+            <p class="lead">Conheça os recursos que irão transformar seu e-commerce</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3">
+                        <i class="fas fa-spider fa-2x p-3"></i>
+                    </div>
+                    <h5 class="card-title">Web Scraping Inteligente</h5>
+                    <p class="card-text">Extraia informações de produtos de qualquer site com facilidade e de forma automática.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3">
+                        <i class="fas fa-sync-alt fa-2x p-3"></i>
+                    </div>
+                    <h5 class="card-title">Importação Automatizada</h5>
+                    <p class="card-text">Importe diretamente para WooCommerce ou Shopify com um único clique.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3">
+                        <i class="fas fa-image fa-2x p-3"></i>
+                    </div>
+                    <h5 class="card-title">Cache de Imagens</h5>
+                    <p class="card-text">Sistema inteligente de cache que otimiza o uso de imagens e acelera sua loja.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Download CTA -->
+    <div class="row py-5">
+        <div class="col-12">
+            <div class="bg-light p-5 rounded text-center">
+                <h2>Baixe Agora e Experimente</h2>
+                <p class="lead mb-4">Versão gratuita disponível para todos os sistemas operacionais</p>
+                
+                <div class="row justify-content-center">
+                    {% for platform, version in latest_versions.items() %}
+                        {% if version %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {% if platform == 'windows' %}
+                                            <i class="fab fa-windows me-2"></i>Windows
+                                        {% elif platform == 'mac' %}
+                                            <i class="fab fa-apple me-2"></i>macOS
+                                        {% else %}
+                                            <i class="fab fa-linux me-2"></i>Linux
+                                        {% endif %}
+                                    </h5>
+                                    <p class="card-text">Versão {{ version.version }}</p>
+                                    <a href="{{ url_for('downloads.download_file', download_id=version.id) }}" class="btn btn-primary">
+                                        <i class="fas fa-download me-2"></i>Baixar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Testimonials -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">O que nossos clientes dizem</h2>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text fst-italic">"Reduzi o tempo de cadastro de produtos em 80%. Vale cada centavo!"</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-3" width="50" height="50" alt="Cliente">
+                        <div>
+                            <h6 class="mb-0">João Silva</h6>
+                            <small class="text-muted">Loja de Eletrônicos</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text fst-italic">"Ótimo suporte e atualizações constantes. O programa evolui junto com o mercado."</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle me-3" width="50" height="50" alt="Cliente">
+                        <div>
+                            <h6 class="mb-0">Maria Oliveira</h6>
+                            <small class="text-muted">Moda Feminina</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text fst-italic">"Aumentei meu catálogo em 300% em apenas um mês. Resultado imediato!"</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="https://randomuser.me/api/portraits/men/67.jpg" class="rounded-circle me-3" width="50" height="50" alt="Cliente">
+                        <div>
+                            <h6 class="mb-0">Carlos Santos</h6>
+                            <small class="text-muted">Loja de Esportes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pricing CTA -->
+    <div class="row py-5">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold">Pronto para aumentar suas vendas?</h2>
+            <p class="lead mb-4">Escolha o plano ideal para o seu negócio</p>
+            <a href="{{ url_for('main.pricing') }}" class="btn btn-lg btn-primary">Ver Planos e Preços</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

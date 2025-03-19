@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema de Importação{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Menu</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('main.dashboard') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user me-2"></i> Perfil
+                    </a>
+                    <a href="{{ url_for('downloads.list_downloads') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-download me-2"></i> Downloads
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-ticket-alt me-2"></i> Suporte
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i> Sair
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Welcome Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3>Bem-vindo, {{ current_user.name }}!</h3>
+                    <p class="text-muted">Acesse todas as funcionalidades do seu plano através do seu dashboard pessoal.</p>
+                </div>
+            </div>
+            
+            <!-- License Info -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informações da Licença</h5>
+                </div>
+                <div class="card-body">
+                    {% if license %}
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h4>Plano {{ license.plan.capitalize() }}</h4>
+                                <p class="mb-1">
+                                    <strong>Status:</strong>
+                                    {% if license.is_active() %}
+                                        <span class="badge bg-success">Ativo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Expirado</span>
+                                    {% endif %}
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Chave:</strong>
+                                    <code>{{ license.key }}</code>
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Expira em:</strong>
+                                    {{ license.expires_at.strftime('%d/%m/%Y') }}
+                                    {% if license.is_active() %}
+                                        ({{ license.days_left() }} dias restantes)
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                {% if license.is_active() %}
+                                    <a href="{{ url_for('payment.checkout', plan=license.plan) }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-sync-alt me-2"></i> Renovar Licença
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url_for('payment.checkout', plan=license.plan) }}" class="btn btn-primary">
+                                        <i class="fas fa-redo me-2"></i> Reativar Licença
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-key text-muted fa-3x mb-3"></i>
+                            <h5>Você ainda não possui uma licença ativa</h5>
+                            <p>Adquira uma licença para acessar todas as funcionalidades do sistema.</p>
+                            <a href="{{ url_for('main.pricing') }}" class="btn btn-primary">
+                                <i class="fas fa-tag me-2"></i> Ver Planos
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Downloads -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Últimos Downloads</h5>
+                    <a href="{{ url_for('downloads.list_downloads') }}" class="btn btn-sm btn-outline-light">Ver Todos</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Versão</th>
+                                    <th>Sistema</th>
+                                    <th>Data</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for download in downloads %}
+                                    {% if download.is_latest %}
+                                        <tr>
+                                            <td>{{ download.version }}</td>
+                                            <td>
+                                                {% if download.platform == 'windows' %}
+                                                    <i class="fab fa-windows me-1"></i> Windows
+                                                {% elif download.platform == 'mac' %}
+                                                    <i class="fab fa-apple me-1"></i> macOS
+                                                {% else %}
+                                                    <i class="fab fa-linux me-1"></i> Linux
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ download.upload_date.strftime('%d/%m/%Y') }}</td>
+                                            <td>
+                                                <a href="{{ url_for('downloads.download_file', download_id=download.id) }}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-download me-1"></i> Baixar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

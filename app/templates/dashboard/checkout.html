@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - {{ plan.capitalize() }} - Sistema de Importação{% endblock %}
+
+{% block styles %}
+<style>
+    .StripeElement {
+        box-sizing: border-box;
+        height: 40px;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background-color: white;
+        transition: box-shadow 150ms ease;
+    }
+
+    .StripeElement--focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #86b7fe;
+    }
+
+    .StripeElement--invalid {
+        border-color: #fa755a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Finalizar Compra - Plano {{ plan.capitalize() }}</h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Resumo do Pedido -->
+                    <div class="alert alert-light mb-4">
+                        <h5>Resumo do Pedido</h5>
+                        <div class="d-flex justify-content-between">
+                            <span>Plano {{ plan.capitalize() }}</span>
+                            <span>R$ {{ "%.2f"|format(base_price) }}</span>
+                        </div>
+                        {% if discount_percent > 0 %}
+                            <div class="d-flex justify-content-between text-success">
+                                <span>Desconto ({{ discount_percent }}%)</span>
+                                <span>-R$ {{ "%.2f"|format(discount_amount) }}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total</span>
+                                <span>R$ {{ "%.2f"|format(final_price) }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Formulário de Pagamento -->
+                    <form id="payment-form" method="POST" action="{{ url_for('payment.process') }}">
+                        <input type="hidden" name="plan" value="{{ plan }}">
+                        
+                        <!-- Seleção de Método de Pagamento -->
+                        <div class="mb-4">
+                            <h5>Método de Pagamento</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="credit_card" value="credit_card" checked>
+                                <label class="form-check-label" for="credit_card">
+                                    <i class="far fa-credit-card me-2"></i>Cartão de Crédito
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="pix" value="pix">
+                                <label class="form-check-label" for="pix">
+                                    <i class="fas fa-qrcode me-2"></i>PIX
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="boleto" value="boleto">
+                                <label class="form-check-label" for="boleto">
+                                    <i class="fas fa-barcode me-2"></i>Boleto Bancário
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Formulário de Cartão de Crédito -->
+                        <div id="credit-card-form" class="mb-4">
+                            <div class="mb-3">
+                                <label for="card-holder" class="form-label">Nome no Cartão</label>
+                                <input type="text" class="form-control" id="card-holder" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="card-element" class="form-label">Dados do Cartão</label>
+                                <div id="card-element" class="form-control"></div>
+                                <div id="card-errors" class="invalid-feedback d-block"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Informações de PIX (inicialmente escondido) -->
+                        <div id="pix-info" class="mb-4" style="display: none;">
+                            <div class="alert alert-info">
+                                <p>Após confirmar o pedido, você receberá um QR Code para pagamento via PIX.</p>
+                                <p>O pagamento será processado instantaneamente.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Informações de Boleto (inicialmente escondido) -->
+                        <div id="boleto-info" class="mb-4" style="display: none;">
+                            <div class="alert alert-info">
+                                <p>Após confirmar o pedido, você receberá um boleto para pagamento.</p>
+                                <p>O pagamento será processado em até 3 dias úteis após o pagamento.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                Li e concordo com os <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Termos de Serviço</a>
+                            </label>
+                        </div>
+                        
+                        <button id="submit-button" type="submit" class="btn btn-primary btn-lg d-block w-100">
+                            <i class="fas fa-lock me-2"></i>Pagar R$ {{ "%.2f"|format(final_price) }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Termos Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Termos de Serviço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Termos de serviço detalhados...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    // Configuração do Stripe
+    const stripe = Stripe('{{ stripe_key }}');
+    const elements = stripe.elements();
+    
+    // Estilo personalizado para o elemento do cartão
+    const style = {
+        base: {
+            fontSize: '16px',
+            color: '#495057',
+            fontSmoothing: 'antialiased',
+        },
+        invalid: {
+            color: '#dc3545',
+            iconColor: '#dc3545'
+        }
+    };
+    
+    // Criar elemento do cartão
+    const cardElement = elements.create('card', {style});
+    cardElement.mount('#card-element');
+    
+    // Lidar com erros de entrada do cartão
+    cardElement.addEventListener('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+    
+    // Alternar entre métodos de pagamento
+    document.querySelectorAll('input[name="payment_method"]').forEach(function(input) {
+        input.addEventListener('change', function() {
+            const method = this.value;
+            
+            // Esconder todos os formulários
+            document.getElementById('credit-card-form').style.display = 'none';
+            document.getElementById('pix-info').style.display = 'none';
+            document.getElementById('boleto-info').style.display = 'none';
+            
+            // Mostrar o formulário relevante
+            if (method === 'credit_card') {
+                document.getElementById('credit-card-form').style.display = 'block';
+            } else if (method === 'pix') {
+                document.getElementById('pix-info').style.display = 'block';
+            } else if (method === 'boleto') {
+                document.getElementById('boleto-info').style.display = 'block';
+            }
+        });
+    });
+    
+    // Lidar com o envio do formulário
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (paymentMethod === 'credit_card') {
+            // Desativar o botão para prevenir múltiplos envios
+            document.getElementById('submit-button').disabled = true;
+            document.getElementById('submit-button').innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processando...';
+            
+            // Criar token para o cartão
+            stripe.createToken(cardElement).then(function(result) {
+                if (result.error) {
+                    document.getElementById('card-errors').textContent = result.error.message;
+                    document.getElementById('submit-button').disabled = false;
+                    document.getElementById('submit-button').innerHTML = '<i class="fas fa-lock me-2"></i>Pagar R$ {{ "%.2f"|format(final_price) }}';
+                } else {
+                    // Adicionar o token ao formulário e enviar
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.setAttribute('type', 'hidden');
+                    hiddenInput.setAttribute('name', 'token');
+                    hiddenInput.setAttribute('value', result.token.id);
+                    form.appendChild(hiddenInput);
+                    form.submit();
+                }
+            });
+        } else {
+            // Para PIX e Boleto, apenas enviar o formulário
+            form.submit();
+        }
+    });
+</script>
+{% endblock %}

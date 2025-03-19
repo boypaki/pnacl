@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo - Sistema de Importação{% endblock %}
+
+{% block styles %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2 mb-4">
+            <!-- Admin Sidebar -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Administração</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('admin.index') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users me-2"></i> Usuários
+                    </a>
+                    <a href="{{ url_for('admin.licenses') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-key me-2"></i> Licenças
+                    </a>
+                    <a href="{{ url_for('admin.payments') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-credit-card me-2"></i> Pagamentos
+                    </a>
+                    <a href="{{ url_for('admin.subscriptions') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-sync me-2"></i> Assinaturas
+                    </a>
+                    <a href="{{ url_for('admin.downloads_stats') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-download me-2"></i> Downloads
+                    </a>
+                    <a href="{{ url_for('main.index') }}" class="list-group-item list-group-item-action text-primary">
+                        <i class="fas fa-home me-2"></i> Voltar ao Site
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-10">
+            <h2 class="mb-4">Dashboard Administrativo</h2>
+            
+            <!-- Estatísticas Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total de Usuários</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_users }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Licenças Ativas</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.active_licenses }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-key fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Total de Pagamentos</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_payments }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Downloads Realizados</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_downloads }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-download fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="row">
+                <!-- Receita Mensal -->
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="m-0 font-weight-bold">Receita Mensal</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividade Recente -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="m-0 font-weight-bold">Atividade Recente</h6>
+                        </div>
+                        <div class="card-body">
+                            <h5>Usuários Recentes</h5>
+                            <ul class="list-group list-group-flush mb-4">
+                                {% for user in recent_users %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ user.name }}
+                                    <span class="text-muted small">{{ user.created_at.strftime('%d/%m/%Y') }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            
+                            <h5>Pagamentos Recentes</h5>
+                            <ul class="list-group list-group-flush">
+                                {% for payment in recent_payments %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    R$ {{ "%.2f"|format(payment.amount) }}
+                                    <span class="badge bg-{{ 'success' if payment.status == 'approved' else 'warning' }}">
+                                        {{ payment.status }}
+                                    </span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Gráfico de Receita
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ revenue_data.labels|tojson }},
+            datasets: [{
+                label: 'Receita (R$)',
+                data: {{ revenue_data.values|tojson }},
+                backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                borderColor: 'rgba(78, 115, 223, 1)',
+                pointRadius: 3,
+                pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                pointBorderColor: 'rgba(78, 115, 223, 1)',
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+                pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                tension: 0.3
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'R$ ' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

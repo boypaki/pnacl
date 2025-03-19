@@ -1,0 +1,73 @@
+/* Estilos personalizados */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* Estilo para o cabeçalho da página */
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+/* Cards com efeito hover */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+/* Estilo para borda à esquerda em cards do dashboard */
+.card.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.card.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.card.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.card.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+/* Estilizar tabelas */
+.table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+/* Estilo para páginas de erro */
+.error-page {
+    text-align: center;
+    padding: 5rem 0;
+}
+
+.error-page .error-code {
+    font-size: 8rem;
+    font-weight: 700;
+    color: #4e73df;
+}
+
+/* Ajustes para dispositivos móveis */
+@media (max-width: 768px) {
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .error-page .error-code {
+        font-size: 5rem;
+    }
+}

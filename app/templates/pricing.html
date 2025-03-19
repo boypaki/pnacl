@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Preços - Sistema de Importação{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Escolha o plano ideal para o seu negócio</h1>
+        <p class="lead">Planos flexíveis para todos os tamanhos de empresas</p>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-3 mb-3">
+        <!-- Plano Mensal -->
+        <div class="col mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="my-0 fw-bold">Mensal</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="card-title">R$ 49,90 <span class="text-muted fw-light">/mês</span></h1>
+                        <p>Para quem está começando</p>
+                    </div>
+                    
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Acesso a todas as funcionalidades</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Suporte por email</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 200 importações/mês</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 1 loja</li>
+                        <li class="mb-2"><i class="fas fa-times text-danger me-2"></i> Sem prioridade no suporte</li>
+                    </ul>
+                    
+                    <div class="d-grid mt-4">
+                        <a href="{{ url_for('payment.checkout', plan='mensal') }}" class="btn btn-primary">Assinar Agora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Plano Trimestral -->
+        <div class="col mb-4">
+            <div class="card h-100 shadow border-primary">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="my-0 fw-bold">Trimestral</h4>
+                    <span class="badge bg-warning">Popular</span>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="card-title">R$ 129,90 <span class="text-muted fw-light">/trimestre</span></h1>
+                        <p class="text-success">Economize 15% (R$ 43,30)</p>
+                    </div>
+                    
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Acesso a todas as funcionalidades</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Suporte por email e chat</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 500 importações/mês</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> 3 lojas</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Suporte prioritário</li>
+                    </ul>
+                    
+                    <div class="d-grid mt-4">
+                        <a href="{{ url_for('payment.checkout', plan='trimestral') }}" class="btn btn-primary">Assinar Agora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Plano Anual -->
+        <div class="col mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="my-0 fw-bold">Anual</h4>
+                    <span class="badge bg-success">Melhor Valor</span>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="card-title">R$ 399,90 <span class="text-muted fw-light">/ano</span></h1>
+                        <p class="text-success">Economize 35% (R$ 198,90)</p>
+                    </div>
+                    
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Acesso a todas as funcionalidades</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Suporte por email, chat e telefone</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Importações ilimitadas</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Lojas ilimitadas</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Suporte VIP</li>
+                    </ul>
+                    
+                    <div class="d-grid mt-4">
+                        <a href="{{ url_for('payment.checkout', plan='anual') }}" class="btn btn-primary">Assinar Agora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-light p-4 rounded mt-5">
+        <div class="text-center mb-4">
+            <h3>Perguntas Frequentes</h3>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <h5>Posso cancelar a qualquer momento?</h5>
+                <p>Sim, você pode cancelar sua assinatura a qualquer momento sem taxas adicionais. O acesso continuará disponível até o final do período pago.</p>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <h5>Como funciona o suporte?</h5>
+                <p>O suporte por email está disponível para todos os planos. Para planos Trimestral e Anual, oferecemos suporte adicional por chat e telefone com tempos de resposta mais rápidos.</p>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <h5>Posso mudar de plano depois?</h5>
+                <p>Sim, você pode fazer upgrade ou downgrade a qualquer momento. Os valores serão ajustados proporcionalmente ao tempo restante.</p>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <h5>Preciso fornecer cartão de crédito para testar?</h5>
+                <p>Não, você pode baixar e usar a versão gratuita para testar as funcionalidades básicas sem fornecer dados de pagamento.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
